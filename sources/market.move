@@ -142,7 +142,7 @@ module donkeyswap::market {
         let order = Order {
             type: type_info::type_of<LimitSwapOrder>(),
             id: { order_store.current_id = order_store.current_id + 1; order_store.current_id },
-            user_address: address_of(user), // VULN: does not check if account is registered
+            user_address: address_of(user), 
             base_type: type_info::type_of<BaseCoinType>(),
             quote_type: type_info::type_of<QuoteCoinType>(),
             base: base,
@@ -166,8 +166,6 @@ module donkeyswap::market {
 
         unlock_coin(order_store, order.base, type_info::type_of<BaseCoinType>());
 
-        // VULN: does not check if order.base_type == type_info::type_of(BaseCoinType)
-        // VULN: does not check if order.user_address == address_of(user)
         deposit_funds<BaseCoinType>(order_store, address_of(user), order.base);
 
         drop_order(order_store, &order);
@@ -340,7 +338,7 @@ module donkeyswap::market {
         let coin_store = borrow_global_mut<CoinStore<CoinType>>(@donkeyswap);
         let coin = coin::extract<CoinType>(&mut coin_store.coins, amount);
         unregister_liquidity(order_store, amount, type_info::type_of<CoinType>());
-        coin::deposit(user_address, coin); // VULN: does not check if user address is registered
+        coin::deposit(user_address, coin); 
     }
 
 
